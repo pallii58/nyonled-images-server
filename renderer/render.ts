@@ -1,5 +1,5 @@
 import puppeteer, { Browser, Page } from 'puppeteer-core';
-import chromium from '@sparticuz/chromium-min';
+import chromium from '@sparticuz/chromium';
 
 interface RenderOptions {
   width?: number;
