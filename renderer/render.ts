@@ -37,11 +37,11 @@ async function getBrowser(): Promise<Browser> {
         '--single-process',
         '--disable-software-rasterizer',
         '--disable-extensions',
+        '--ignore-certificate-errors',
       ],
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
       headless: true, // Force headless mode
-      ignoreHTTPSErrors: true,
     });
   }
   return browserInstance;
@@ -213,7 +213,7 @@ export async function renderNeon(
 
     // Additional delay for neon glow effects to stabilize
     if (delay > 0) {
-      await page.waitForTimeout(delay);
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
 
     // Take screenshot
