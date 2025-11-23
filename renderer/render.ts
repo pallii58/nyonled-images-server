@@ -27,6 +27,8 @@ async function getBrowser(): Promise<Browser> {
     // Configure Chromium for Vercel serverless environment
     chromium.setGraphicsMode(false);
     
+    const executablePath = await chromium.executablePath();
+    
     browserInstance = await puppeteer.launch({
       args: [
         ...chromium.args,
@@ -35,10 +37,12 @@ async function getBrowser(): Promise<Browser> {
         '--disable-setuid-sandbox',
         '--no-sandbox',
         '--single-process',
+        '--disable-software-rasterizer',
+        '--disable-extensions',
       ],
       defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath(),
-      headless: chromium.headless,
+      executablePath: executablePath,
+      headless: true, // Force headless mode
       ignoreHTTPSErrors: true,
     });
   }
