@@ -2,6 +2,14 @@
 
 Server-side rendering API per generare immagini prodotto del Neon Configurator usando Puppeteer su Vercel.
 
+## ⚠️ IMPORTANTE: Configurazione Vercel
+
+**Devi disabilitare la Deployment Protection per permettere le chiamate API dal browser:**
+
+1. Vai su https://vercel.com/gabriele-tomas-projects/server/settings/deployment-protection
+2. Disabilita la "Deployment Protection" per questo progetto
+3. Le API devono essere pubbliche per funzionare con CORS
+
 ## 🚀 Deploy su Vercel
 
 Questo progetto è configurato per essere deployato su Vercel come serverless functions.
