@@ -4,7 +4,8 @@
   "outputDirectory": "",
   "functions": {
     "api/**/*.ts": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 3008
     }
   },
   "headers": [
