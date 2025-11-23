@@ -1,5 +1,5 @@
 import puppeteer, { Browser, Page } from 'puppeteer-core';
-import chromium from '@sparticuz/chromium-min';
+import chromium from '@sparticuz/chromium';
 
 interface RenderOptions {
   width?: number;
@@ -24,18 +24,26 @@ let browserInstance: Browser | null = null;
  */
 async function getBrowser(): Promise<Browser> {
   if (!browserInstance || !browserInstance.isConnected()) {
-    // Configure Chromium-min for Vercel serverless environment
-    // Force extraction of chromium binary if needed
-    if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL) {
-      // Force extraction in serverless environments
-      await chromium.font('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+    // Configure Chromium for Vercel serverless environment
+    // Set graphics mode to false for serverless
+    if (typeof (chromium as any).setGraphicsMode === 'function') {
+      (chromium as any).setGraphicsMode(false);
     }
     
     const executablePath = await chromium.executablePath();
     console.log('Chromium executable path:', executablePath);
     
     browserInstance = await puppeteer.launch({
-      args: chromium.args,
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu',
+      ],
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
       headless: chromium.headless,
