@@ -45,11 +45,15 @@ export default async function handler(
 
   const { text, fontId, color, plexiglassStyle, width, height } = req.body;
 
+  // Log for debugging (remove in production if needed)
+  console.log('Received request:', { text, fontId, color, plexiglassStyle, width, height });
+
   // Validate required fields
   if (!text || !fontId || !color) {
     return res.status(400).json({ 
       error: 'Missing required fields',
-      required: ['text', 'fontId', 'color']
+      required: ['text', 'fontId', 'color'],
+      received: { text: !!text, fontId: !!fontId, color: !!color }
     });
   }
 
