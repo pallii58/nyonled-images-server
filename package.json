@@ -1,0 +1,37 @@
+{
+  "name": "neon-renderer-server",
+  "version": "1.0.0",
+  "description": "Server-side rendering for Neon Configurator using Puppeteer",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "tsx watch server.ts",
+    "build": "tsc && mkdir -p public",
+    "start": "node dist/server.js",
+    "render": "tsx server.ts"
+  },
+  "keywords": [
+    "puppeteer",
+    "screenshot",
+    "neon",
+    "renderer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@sparticuz/chromium": "^119.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "puppeteer-core": "^21.5.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "@vercel/node": "^3.2.29",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
