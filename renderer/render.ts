@@ -25,8 +25,14 @@ let browserInstance: Browser | null = null;
 async function getBrowser(): Promise<Browser> {
   if (!browserInstance || !browserInstance.isConnected()) {
     // Configure Chromium-min for Vercel serverless environment
-    // chromium-min includes all necessary libraries bundled
+    // Force extraction of chromium binary if needed
+    if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL) {
+      // Force extraction in serverless environments
+      await chromium.font('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+    }
+    
     const executablePath = await chromium.executablePath();
+    console.log('Chromium executable path:', executablePath);
     
     browserInstance = await puppeteer.launch({
       args: chromium.args,
