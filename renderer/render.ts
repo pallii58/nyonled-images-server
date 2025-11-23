@@ -25,10 +25,6 @@ let browserInstance: Browser | null = null;
 async function getBrowser(): Promise<Browser> {
   if (!browserInstance || !browserInstance.isConnected()) {
     // Configure Chromium for Vercel serverless environment
-    // Try to set graphics mode if available (for older versions)
-    if (typeof chromium.setGraphicsMode === 'function') {
-      chromium.setGraphicsMode(false);
-    }
     const executablePath = await chromium.executablePath();
     
     browserInstance = await puppeteer.launch({
