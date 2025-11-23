@@ -25,23 +25,14 @@ let browserInstance: Browser | null = null;
 async function getBrowser(): Promise<Browser> {
   if (!browserInstance || !browserInstance.isConnected()) {
     // Configure Chromium for Vercel serverless environment
+    // Use chromium's default configuration which handles all the necessary setup
     const executablePath = await chromium.executablePath();
     
     browserInstance = await puppeteer.launch({
-      args: [
-        ...chromium.args,
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-sandbox',
-        '--single-process',
-        '--disable-software-rasterizer',
-        '--disable-extensions',
-        '--ignore-certificate-errors',
-      ],
+      args: chromium.args,
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
-      headless: true, // Force headless mode
+      headless: chromium.headless,
     });
   }
   return browserInstance;
@@ -77,6 +68,9 @@ export async function renderNeon(
 
   const browser = await getBrowser();
   const page = await browser.newPage();
+  
+  // Close browser after each render to avoid shared library issues on Vercel
+  const shouldCloseBrowser = true;
 
   try {
     // Set viewport with high DPI for crisp neon rendering
@@ -240,6 +234,15 @@ export async function renderNeon(
     };
   } finally {
     await page.close();
+    // Close browser after each render to avoid shared library issues on Vercel serverless
+    if (shouldCloseBrowser && browserInstance) {
+      try {
+        await browserInstance.close();
+        browserInstance = null;
+      } catch (e) {
+        // Ignore errors when closing
+      }
+    }
   }
 }
 
