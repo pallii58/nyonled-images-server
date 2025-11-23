@@ -43,17 +43,35 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { text, fontId, color, plexiglassStyle, width, height } = req.body;
+  // Parse body if it's a string (can happen with Vercel)
+  let body = req.body;
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (e) {
+      return res.status(400).json({ 
+        error: 'Invalid JSON in request body',
+        message: e instanceof Error ? e.message : 'Unknown error'
+      });
+    }
+  }
+
+  const { text, fontId, color, plexiglassStyle, width, height } = body || {};
 
   // Log for debugging (remove in production if needed)
-  console.log('Received request:', { text, fontId, color, plexiglassStyle, width, height });
+  console.log('Received request:', { text, fontId, color, plexiglassStyle, width, height, bodyType: typeof body });
 
   // Validate required fields
   if (!text || !fontId || !color) {
     return res.status(400).json({ 
       error: 'Missing required fields',
       required: ['text', 'fontId', 'color'],
-      received: { text: !!text, fontId: !!fontId, color: !!color }
+      received: { 
+        text: !!text, 
+        fontId: !!fontId, 
+        color: !!color,
+        body: body ? Object.keys(body) : 'no body'
+      }
     });
   }
 
